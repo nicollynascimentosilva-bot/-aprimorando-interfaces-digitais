@@ -1,65 +1,55 @@
-// ==========================================
-// 1. GERENCIAMENTO DO MODO ESCURO (THEME)
-// ==========================================
+// 1. Banco de dados simulado (Array de Objetos)
+const postsData = [
+    { id: 1, tag: "Code", title: "Dominando JavaScript", desc: "Entenda closures, promises e async/await de uma vez por todas.", img: "https://picsum.photos" },
+    { id: 2, tag: "Design", title: "Tendências de UI/UX", desc: "Como usar Glassmorphism e interações fluidas nos seus projetos.", img: "https://picsum.photos" },
+    { id: 3, tag: "DevOps", title: "Introdução ao Docker", desc: "Aprenda a isolar suas aplicações em containers de forma prática.", img: "https://picsum.photos" },
+    { id: 4, tag: "Code", title: "CSS Moderno Avançado", desc: "Explore subgrid, container queries e funções matemáticas no CSS.", img: "https://picsum.photos" }
+];
 
+const gridContainer = document.getElementById('cards-grid');
+const searchInput = document.getElementById('search-input');
 const themeToggleBtn = document.getElementById('toggle-dark-mode');
 
-/**
- * Aplica o tema escolhido e salva a preferência no navegador
- * @param {boolean} isDark 
- */
-const setTheme = (isDark) => {
-    if (isDark) {
-        document.body.classList.add('dark-mode');
-        localStorage.setItem('theme', 'dark');
-        themeToggleBtn.textContent = 'Modo Claro ☀️';
-    } else {
-        document.body.classList.remove('dark-mode');
-        localStorage.setItem('theme', 'light');
-        themeToggleBtn.textContent = 'Modo Escuro 🌙';
-    }
-};
-
-// Verifica se há tema salvo ou usa a preferência do sistema operacional
-const savedTheme = localStorage.getItem('theme');
-const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-
-if (savedTheme === 'dark' || (!savedTheme && systemPrefersDark)) {
-    setTheme(true);
-} else {
-    setTheme(false);
+// 2. Função para renderizar os cards na tela
+function renderCards(posts) {
+    // Limpa o grid antes de desenhar
+    gridContainer.innerHTML = ""; 
+    
+    // Mapeia o array e cria o HTML de cada card
+    posts.forEach(post => {
+        const cardHTML = `
+            <article class="post-card">
+                <img src="${post.img}" alt="${post.title}" class="card-img" loading="lazy">
+                <div class="card-content">
+                    <span class="card-tag">${post.tag}</span>
+                    <h2 class="card-title">${post.title}</h2>
+                    <p class="card-excerpt">${post.desc}</p>
+                </div>
+            </article>
+        `;
+        gridContainer.innerHTML += cardHTML;
+    });
 }
 
-// Ouvinte de clique para alternar o tema voluntariamente
-themeToggleBtn.addEventListener('click', () => {
-    const isCurrentlyDark = document.body.classList.contains('dark-mode');
-    setTheme(!isCurrentlyDark);
-});
-
-
-// ==========================================
-// 2. COMPORTAMENTO DE CLIQUE NOS CARDS (UX)
-// ==========================================
-
-// Seleciona todos os cards da página
-const postCards = document.querySelectorAll('.post-card');
-
-postCards.forEach(card => {
-    // Busca o link interno "Ler mais" de cada card
-    const mainLink = card.querySelector('.card-link');
+// 3. Sistema de Filtro/Busca em Tempo Real
+searchInput.addEventListener('input', (e) => {
+    const searchTerm = e.target.value.toLowerCase();
     
-    if (!mainLink) return;
-
-    // Torna o card inteiro clicável
-    card.addEventListener('click', () => {
-        mainLink.click();
-    });
-
-    // Permite que o usuário use a tecla "Enter" ao navegar pelo teclado (Tab)
-    card.addEventListener('keydown', (event) => {
-        if (event.key === 'Enter') {
-            event.preventDefault();
-            mainLink.click();
-        }
-    });
+    // Filtra os dados se o título ou a tag incluírem o texto digitado
+    const filteredPosts = postsData.filter(post => 
+        post.title.toLowerCase().includes(searchTerm) || 
+        post.tag.toLowerCase().includes(searchTerm)
+    );
+    
+    renderCards(filteredPosts);
 });
+
+// 4. Alternador de Modo Escuro Simples
+themeToggleBtn.addEventListener('click', () => {
+    document.body.classList.toggle('dark-mode');
+    const isDark = document.body.classList.contains('dark-mode');
+    themeToggleBtn.textContent = isDark ? "Modo Claro" : "Modo Escuro";
+});
+
+// Inicializa a página mostrando todos os cards
+renderCards(postsData);
