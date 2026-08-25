@@ -8,18 +8,27 @@
 </head>
 <body>
 
-    <!-- Botão para alternar o modo escuro -->
-    <button id="toggle-dark-mode" class="btn-theme">Alternar Modo Escuro</button>
+    <!-- Botão de acessibilidade com ARIA para leitores de tela -->
+    <button id="toggle-dark-mode" class="btn-theme" aria-label="Alternar entre modo claro e escuro">
+        Alternar Modo Escuro
+    </button>
 
     <main class="container">
-        <!-- Card de Postagem -->
-        <article class="post-card">
-            <img src="https://picsum.photos" alt="Imagem de capa do post" class="card-img">
+        <!-- Card com foco acessível via teclado caso seja clicável -->
+        <article class="post-card" tabindex="0">
+            <img 
+                src="https://picsum.photos" 
+                alt="Notebook aberto sobre uma mesa exibindo linhas de código" 
+                class="card-img"
+                width="400"
+                height="250"
+                loading="lazy" 
+            >
             <div class="card-content">
                 <span class="card-tag">Tecnologia</span>
                 <h2 class="card-title">Aprendendo Animações em CSS</h2>
                 <p class="card-excerpt">Descubra como os seletores e propriedades como transform e box-shadow podem dar vida ao seu layout web.</p>
-                <a href="#" class="card-link">Ler mais →</a>
+                <a href="#" class="card-link" tabIndex="-1">Ler mais <span aria-hidden="true">→</span></a>
             </div>
         </article>
     </main>
