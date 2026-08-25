@@ -1,55 +1,123 @@
-// 1. Banco de dados simulado (Array de Objetos)
-const postsData = [
-    { id: 1, tag: "Code", title: "Dominando JavaScript", desc: "Entenda closures, promises e async/await de uma vez por todas.", img: "https://picsum.photos" },
-    { id: 2, tag: "Design", title: "Tendências de UI/UX", desc: "Como usar Glassmorphism e interações fluidas nos seus projetos.", img: "https://picsum.photos" },
-    { id: 3, tag: "DevOps", title: "Introdução ao Docker", desc: "Aprenda a isolar suas aplicações em containers de forma prática.", img: "https://picsum.photos" },
-    { id: 4, tag: "Code", title: "CSS Moderno Avançado", desc: "Explore subgrid, container queries e funções matemáticas no CSS.", img: "https://picsum.photos" }
-];
+// CONTROLE DE TEMA (DARK / LIGHT)
+const themeToggleBtn = document.getElementById('theme-toggle');
+themeToggleBtn.addEventListener('click', () => {
+    document.body.classList.toggle('dark-mode');
+});
 
-const gridContainer = document.getElementById('cards-grid');
-const searchInput = document.getElementById('search-input');
-const themeToggleBtn = document.getElementById('toggle-dark-mode');
+// SISTEMA INTERATIVO DOS JOGOS
+let gameInterval;
+let snake = [];
+let food = {};
+let dx = 20;
+let dy = 0;
+let score = 0;
+let clickerScore = 0;
 
-// 2. Função para renderizar os cards na tela
-function renderCards(posts) {
-    // Limpa o grid antes de desenhar
-    gridContainer.innerHTML = ""; 
+function openGame(gameType) {
+    const modal = document.getElementById('game-modal');
+    const title = document.getElementById('game-title');
+    const canvas = document.getElementById('gameCanvas');
+    const clickerArena = document.getElementById('clicker-arena');
     
-    // Mapeia o array e cria o HTML de cada card
-    posts.forEach(post => {
-        const cardHTML = `
-            <article class="post-card">
-                <img src="${post.img}" alt="${post.title}" class="card-img" loading="lazy">
-                <div class="card-content">
-                    <span class="card-tag">${post.tag}</span>
-                    <h2 class="card-title">${post.title}</h2>
-                    <p class="card-excerpt">${post.desc}</p>
-                </div>
-            </article>
-        `;
-        gridContainer.innerHTML += cardHTML;
+    modal.style.display = 'flex';
+    clearInterval(gameInterval);
+    
+    if (gameType === 'snake') {
+        title.innerText = '🐍 Jogo da Cobrinha (Use as Setas)';
+        canvas.style.display = 'block';
+        clickerArena.style.display = 'none';
+        startSnakeGame();
+    } else {
+        title.innerText = '⚡ Cyber Clicker (Seja Rápido!)';
+        canvas.style.display = 'none';
+        clickerArena.style.display = 'block';
+        startClickerGame();
+    }
+}
+
+function closeGame() {
+    document.getElementById('game-modal').style.display = 'none';
+    clearInterval(gameInterval);
+}
+
+// LÓGICA DO JOGO SNAKE
+function startSnakeGame() {
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+    
+    snake = [{x: 160, y: 160}, {x: 140, y: 160}, {x: 120, y: 160}];
+    dx = 20; dy = 0;
+    genFood();
+    
+    document.addEventListener('keydown', changeDirection);
+    gameInterval = setInterval(() => {
+        clearCanvas(ctx, canvas);
+        drawFood(ctx);
+        moveSnake();
+        drawSnake(ctx);
+    }, 100);
+}
+
+function clearCanvas(ctx, canvas) {
+    ctx.fillStyle = '#050b14';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+}
+
+function drawSnake(ctx) {
+    snake.forEach(part => {
+        ctx.fillStyle = '#10b981';
+        ctx.fillRect(part.x, part.y, 18, 18);
     });
 }
 
-// 3. Sistema de Filtro/Busca em Tempo Real
-searchInput.addEventListener('input', (e) => {
-    const searchTerm = e.target.value.toLowerCase();
+function moveSnake() {
+    const head = {x: snake[0].x + dx, y: snake[0].y + dy};
     
-    // Filtra os dados se o título ou a tag incluírem o texto digitado
-    const filteredPosts = postsData.filter(post => 
-        post.title.toLowerCase().includes(searchTerm) || 
-        post.tag.toLowerCase().includes(searchTerm)
-    );
+    // Atravessar paredes de forma infinita
+    if (head.x < 0) head.x = 380;
+    if (head.x >= 400) head.x = 0;
+    if (head.y < 0) head.y = 380;
+    if (head.y >= 400) head.y = 0;
     
-    renderCards(filteredPosts);
-});
+    snake.unshift(head);
+    if (head.x === food.x && head.y === food.y) {
+        genFood();
+    } else {
+        snake.pop();
+    }
+}
 
-// 4. Alternador de Modo Escuro Simples
-themeToggleBtn.addEventListener('click', () => {
-    document.body.classList.toggle('dark-mode');
-    const isDark = document.body.classList.contains('dark-mode');
-    themeToggleBtn.textContent = isDark ? "Modo Claro" : "Modo Escuro";
-});
+function changeDirection(event) {
+    const LEFT_KEY = 37; const RIGHT_KEY = 39;
+    const UP_KEY = 38; const DOWN_KEY = 40;
+    const keyPressed = event.keyCode;
+    
+    if (keyPressed === LEFT_KEY && dx === 0) { dx = -20; dy = 0; }
+    if (keyPressed === UP_KEY && dy === 0) { dx = 0; dy = -20; }
+    if (keyPressed === RIGHT_KEY && dx === 0) { dx = 20; dy = 0; }
+    if (keyPressed === DOWN_KEY && dy === 0) { dx = 0; dy = 20; }
+}
 
-// Inicializa a página mostrando todos os cards
-renderCards(postsData);
+function genFood() {
+    food.x = Math.floor(Math.random() * 20) * 20;
+    food.y = Math.floor(Math.random() * 20) * 20;
+}
+
+function drawFood(ctx) {
+    ctx.fillStyle = '#ef4444';
+    ctx.fillRect(food.x, food.y, 18, 18);
+}
+
+// LÓGICA DO JOGO CLICKER
+function startClickerGame() {
+    clickerScore = 0;
+    document.getElementById('click-score').innerText = clickerScore;
+    const btn = document.getElementById('target-btn');
+    
+    btn.onclick = () => {
+        clickerScore++;
+        document.getElementById('click-score').innerText = clickerScore;
+        btn.style.marginLeft = Math.random() * 100 + 'px';
+        btn.style.marginTop = Math.random() * 50 + 'px';
+    };
+}
