@@ -3,34 +3,64 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Card de Postagem Interativo</title>
+    <title>Grid Dinâmico de Postagens</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <!-- Botão de acessibilidade com ARIA para leitores de tela -->
     <button id="toggle-dark-mode" class="btn-theme" aria-label="Alternar entre modo claro e escuro">
         Alternar Modo Escuro
     </button>
 
+    <!-- O container principal agora engloba o grid -->
     <main class="container">
-        <!-- Card com foco acessível via teclado caso seja clicável -->
-        <article class="post-card" tabindex="0">
-            <img 
-                src="https://picsum.photos" 
-                alt="Notebook aberto sobre uma mesa exibindo linhas de código" 
-                class="card-img"
-                width="400"
-                height="250"
-                loading="lazy" 
-            >
-            <div class="card-content">
-                <span class="card-tag">Tecnologia</span>
-                <h2 class="card-title">Aprendendo Animações em CSS</h2>
-                <p class="card-excerpt">Descubra como os seletores e propriedades como transform e box-shadow podem dar vida ao seu layout web.</p>
-                <a href="#" class="card-link" tabIndex="-1">Ler mais <span aria-hidden="true">→</span></a>
-            </div>
-        </article>
+        <div class="cards-grid">
+            
+            <!-- Card 1 -->
+            <article class="post-card" tabindex="0">
+                <img src="https://picsum.photos" alt="Notebook aberto sobre uma mesa exibindo linhas de código" class="card-img" width="400" height="250" loading="lazy">
+                <div class="card-content">
+                    <span class="card-tag">Tecnologia</span>
+                    <h2 class="card-title">Animações em CSS</h2>
+                    <p class="card-excerpt">Descubra como os seletores e propriedades como transform e box-shadow podem dar vida ao seu layout web.</p>
+                    <a href="#" class="card-link" tabIndex="-1">Ler mais <span aria-hidden="true">→</span></a>
+                </div>
+            </article>
+
+            <!-- Card 2 -->
+            <article class="post-card" tabindex="0">
+                <img src="https://picsum.photos" alt="Pessoa digitando em um teclado mecânico iluminado" class="card-img" width="400" height="250" loading="lazy">
+                <div class="card-content">
+                    <span class="card-tag">Carreira</span>
+                    <h2 class="card-title">Produtividade Dev</h2>
+                    <p class="card-excerpt">Dicas e ferramentas essenciais para organizar seu fluxo de trabalho e focar no código que importa.</p>
+                    <a href="#" class="card-link" tabIndex="-1">Ler mais <span aria-hidden="true">→</span></a>
+                </div>
+            </article>
+
+            <!-- Card 3 -->
+            <article class="post-card" tabindex="0">
+                <img src="https://picsum.photos" alt="Configuração de monitor vertical com gráficos e código" class="card-img" width="400" height="250" loading="lazy">
+                <div class="card-content">
+                    <span class="card-tag">Frontend</span>
+                    <h2 class="card-title">Arquitetura CSS Grid</h2>
+                    <p class="card-excerpt">Aprenda a criar layouts bidimensionais complexos de forma nativa e extremamente limpa.</p>
+                    <a href="#" class="card-link" tabIndex="-1">Ler mais <span aria-hidden="true">→</span></a>
+                </div>
+            </article>
+
+            <!-- Card 4 -->
+            <article class="post-card" tabindex="0">
+                <img src="https://picsum.photos" alt="Esboço de design de interface em um tablet com caneta digital" class="card-img" width="400" height="250" loading="lazy">
+                <div class="card-content">
+                    <span class="card-tag">UI/UX</span>
+                    <h2 class="card-title">Design para Programadores</h2>
+                    <p class="card-excerpt">Princípios básicos de tipografia, espaçamento e cores para melhorar a interface dos seus sistemas.</p>
+                    <a href="#" class="card-link" tabIndex="-1">Ler mais <span aria-hidden="true">→</span></a>
+                </div>
+            </article>
+
+        </div>
     </main>
 
     <script src="script.js"></script>
