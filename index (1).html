@@ -3,23 +3,57 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hub de Conteúdo Dinâmico</title>
+    <title>Retro Arcade Hub</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <header class="app-header">
-        <button id="toggle-dark-mode" class="btn-theme" aria-label="Alternar tema">
-            Modo Escuro
-        </button>
-        <!-- Campo de busca dinâmico -->
-        <input type="search" id="search-input" class="search-bar" placeholder="Pesquisar posts por título ou tag...">
+    <header>
+        <div class="logo">🎮 RETRO<span>ARCADE</span></div>
+        <button id="theme-toggle" class="theme-btn">⚡ MUDAR ENERGIA</button>
     </header>
 
     <main class="container">
-        <!-- O JavaScript vai preencher este container automaticamente -->
-        <div id="cards-grid" class="cards-grid"></div>
+        <!-- Card Jogo 1: Snake -->
+        <article class="post-card game-snake" onclick="openGame('snake')">
+            <div class="card-badge">CLÁSSICO</div>
+            <img src="https://unsplash.com" alt="Snake Game" class="card-img">
+            <div class="card-content">
+                <span class="card-tag">Arcade</span>
+                <h2>Snake Game</h2>
+                <p>O lendário jogo da cobrinha! Coma os pixels pixelados e tente não colidir com o próprio corpo.</p>
+                <button class="play-btn">JOGAR AGORA</button>
+            </div>
+        </article>
+
+        <!-- Card Jogo 2: Space Invaders Concept -->
+        <article class="post-card game-space" onclick="openGame('clicker')">
+            <div class="card-badge">ACTION</div>
+            <img src="https://unsplash.com" alt="Space Game" class="card-img">
+            <div class="card-content">
+                <span class="card-tag">Sci-Fi</span>
+                <h2>Cyber Clicker</h2>
+                <p>Destrua os alvos na velocidade da luz neste mini-game de reflexo ultra rápido e pontuação extrema.</p>
+                <button class="play-btn">JOGAR AGORA</button>
+            </div>
+        </article>
     </main>
+
+    <!-- Modal do Jogo Ativo -->
+    <div id="game-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeGame()">&times;</span>
+            <h2 id="game-title">Carregando Jogo...</h2>
+            <div id="game-arena">
+                <!-- O jogo em JS renderiza aqui dentro -->
+                <canvas id="gameCanvas" width="400" height="400"></canvas>
+                <div id="clicker-arena" style="display:none;">
+                    <p>Score: <span id="click-score">0</span></p>
+                    <button id="target-btn">CLIQUE EM MIM!</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <script src="script.js"></script>
 </body>
